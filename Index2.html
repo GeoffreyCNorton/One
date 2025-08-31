@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fencing News — Last 7 Days</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Modern CSS with fencing theme */
+        :root {
+            --primary: #2c3e50;
+            --accent: #c92b2b;
+            --fencing-blue: #3498db;
+            --fencing-red: #e74c3c;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .logo-text h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .logo-text p {
+            color: var(--text-light);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .controls-bar {
+            display: flex;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            background: var(--light-bg);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--light-bg);
+            color: var(--text);
+            font-size: 1rem;
+            min-width: 150px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .sidebar h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            color: var(--primary);
+        }
+
+        .sources-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .sources-list li {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sources-list li:last-child {
+            border-bottom: none;
+        }
+
+        .sources-list input {
+            margin-right: 12px;
+        }
+
+        .source-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .source-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: var(--radius);
+            background: var(--light-bg);
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .source-actions button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            padding: 20px 20px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .card-header h2 a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .card-header h2 a:hover {
+            color: var(--accent);
+        }
+
+        .card-body {
+            padding: 15px 20px;
+        }
+
+        .card-body p {
+            color: var(--text);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            padding: 15px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light-bg);
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .language {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: var(--fencing-blue);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .refresh-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .refresh-btn {
+            padding: 14px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .refresh-btn:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 1000px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .news-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .controls-bar {
+                flex-direction: column;
+            }
+            
+            .filter-box {
+                width: 100%;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-fencing"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Fencing News</h1>
+                    <p>Global fencing news from the last 7 days</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search" placeholder="Search news...">
+            </div>
+            <div class="filter-box">
+                <select id="language">
+                    <option value="">All Languages</option>
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="it">Italian</option>
+                </select>
+                <select id="sort">
+                    <option value="date_desc">Newest First</option>
+                    <option value="date_asc">Oldest First</option>
+                    <option value="source">Source (A-Z)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Articles</h3>
+                <div class="number" id="countArticles">12</div>
+            </div>
+            <div class="stat-card">
+                <h3>Sources</h3>
+                <div class="number" id="countSources">7</div>
+            </div>
+            <div class="stat-card">
+                <h3>Languages</h3>
+                <div class="number" id="countLanguages">4</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <h2>News Sources</h2>
+                <ul class="sources-list" id="sourcesList">
+                    <li>
+                        <input type="checkbox" id="source1" checked>
+                        <label for="source1">International Fencing Federation</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="source2" checked>
+                        <label for="source2">Fencing.net</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="source3" checked>
+                        <label for="source3">European Fencing Confederation</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="source4" checked>
+                        <label for="source4">Fencing World</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="source5" checked>
+                        <label for="source5">Olympic Fencing News</label>
+                    </li>
+                </ul>
+                <div class="source-actions">
+                    <button id="selectAll">Select All</button>
+                    <button id="deselectAll">Deselect All</button>
+                </div>
+            </div>
+
+            <div class="news-container">
+                <div class="news-grid" id="news">
+                    <!-- News cards will be generated here -->
+                </div>
+                
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-newspaper"></i>
+                    <h3>No articles found</h3>
+                    <p>Try adjusting your search or filters</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="refresh-container">
+            <button class="refresh-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i>
+                Refresh News
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Sample news data
+        const newsData = [
+            {
+                title: "Italy Dominates World Fencing Championships",
+                summary: "The Italian team secured three gold medals at the recent World Fencing Championships in Cairo, demonstrating their continued dominance in the sport.",
+                link: "#",
+                source: "International Fencing Federation",
+                date: "2023-07-15",
+                language: "en"
+            },
+            {
+                title: "New Fencing Technology Revolutionizes Training",
+                summary: "Advanced sensor technology is changing how fencers train and analyze their performance, with several Olympic teams adopting the new systems.",
+                link: "#",
+                source: "Fencing.net",
+                date: "2023-07-14",
+                language: "en"
+            },
+            {
+                title: "Young Fencer Makes Surprise Win at European Juniors",
+                summary: "17-year-old Anna Kovacs from Hungary defeated the favorite in an exciting final match at the European Junior Championships.",
+                link: "#",
+                source: "European Fencing Confederation",
+                date: "2023-07-12",
+                language: "en"
+            },
+            {
+                title: "Fencing Included in 2028 Olympics with New Format",
+                summary: "The International Olympic Committee has confirmed fencing will feature in the 2028 Games with an updated team event format.",
+                link: "#",
+                source: "Olympic Fencing News",
+                date: "2023-07-10",
+                language: "en"
+            },
+            {
+                title: "Historical Fencing Manuscript Discovered in Archive",
+                summary: "A previously unknown fencing manual from the 16th century has been discovered in a Spanish monastery, shedding new light on historical techniques.",
+                link: "#",
+                source: "Fencing World",
+                date: "2023-07-08",
+                language: "en"
+            },
+            {
+                title: "France Prepares to Host World Cup Event",
+                summary: "Paris will host the next World Cup event with unprecedented ticket sales, indicating growing popularity of fencing.",
+                link: "#",
+                source: "International Fencing Federation",
+                date: "2023-07-07",
+                language: "fr"
+            },
+            {
+                title: "New Safety Regulations for Fencing Equipment",
+                summary: "The international governing body has announced updated safety standards for fencing masks and protective gear.",
+                link: "#",
+                source: "Fencing.net",
+                date: "2023-07-05",
+                language: "en"
+            },
+            {
+                title: "Fencing Club Initiative Attracts Youth Participants",
+                summary: "A community outreach program has introduced fencing to over 1,000 young people in urban areas this year.",
+                link: "#",
+                source: "Fencing World",
+                date: "2023-07-03",
+                language: "en"
+            },
+            {
+                title: "Veteran Fencer Announces Comeback",
+                summary: "After a five-year hiatus, two-time Olympic medalist Elena Petrov has announced her return to competitive fencing.",
+                link: "#",
+                source: "European Fencing Confederation",
+                date: "2023-07-02",
+                language: "de"
+            },
+            {
+                title: "Asian Fencing Championships Break Viewership Records",
+                summary: "This year's Asian Fencing Championships attracted the largest television audience in the event's history.",
+                link: "#",
+                source: "Olympic Fencing News",
+                date: "2023-06-30",
+                language: "en"
+            },
+            {
+                title: "Scholarship Program for Promising Young Fencers",
+                summary: "A new initiative will provide financial support and training opportunities for talented fencers from disadvantaged backgrounds.",
+                link: "#",
+                source: "Fencing.net",
+                date: "2023-06-28",
+                language: "es"
+            },
+            {
+                title: "Historical Exhibition: Fencing Through the Ages",
+                summary: "A new museum exhibition traces the evolution of fencing from medieval combat to modern sport.",
+                link: "#",
+                source: "Fencing World",
+                date: "2023-06-25",
+                language: "it"
+            }
+        ];
+
+        // App state
+        const state = {
+            all: newsData,
+            filtered: newsData,
+            search: "",
+            language: "",
+            sort: "date_desc",
+            sources: [
+                "International Fencing Federation",
+                "Fencing.net",
+                "European Fencing Confederation",
+                "Fencing World",
+                "Olympic Fencing News"
+            ],
+            selectedSources: [
+                "International Fencing Federation",
+                "Fencing.net",
+                "European Fencing Confederation",
+                "Fencing World",
+                "Olympic Fencing News"
+            ]
+        };
+
+        // DOM elements
+        const newsContainer = document.getElementById("news");
+        const emptyState = document.getElementById("emptyState");
+        const countArticles = document.getElementById("countArticles");
+        const countSources = document.getElementById("countSources");
+        const countLanguages = document.getElementById("countLanguages");
+        const searchInput = document.getElementById("search");
+        const languageFilter = document.getElementById("language");
+        const sortFilter = document.getElementById("sort");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const selectAllBtn = document.getElementById("selectAll");
+        const deselectAllBtn = document.getElementById("deselectAll");
+
+        // Initialize the app
+        function init() {
+            renderNews();
+            setupEventListeners();
+            updateStats();
+        }
+
+        // Filter news based on current state
+        function filterNews() {
+            state.filtered = state.all.filter(item => {
+                const matchesSearch = !state.search || 
+                    item.title.toLowerCase().includes(state.search.toLowerCase()) ||
+                    item.summary.toLowerCase().includes(state.search.toLowerCase());
+                
+                const matchesLanguage = !state.language || item.language === state.language;
+                
+                const matchesSource = state.selectedSources.includes(item.source);
+                
+                return matchesSearch && matchesLanguage && matchesSource;
+            });
+
+            // Sort results
+            if (state.sort === "date_desc") {
+                state.filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (state.sort === "date_asc") {
+                state.filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else if (state.sort === "source") {
+                state.filtered.sort((a, b) => a.source.localeCompare(b.source));
+            }
+
+            renderNews();
+            updateStats();
+        }
+
+        // Render news cards
+        function renderNews() {
+            newsContainer.innerHTML = "";
+            
+            if (state.filtered.length === 0) {
+                emptyState.style.display = "block";
+                return;
+            }
+            
+            emptyState.style.display = "none";
+            
+            state.filtered.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "news-card";
+                
+                const date = new Date(item.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h2><a href="${item.link}" target="_blank">${item.title}</a></h2>
+                    </div>
+                    <div class="card-body">
+                        <p>${item.summary}</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="meta">
+                            <span>${item.source}</span> • 
+                            <span>${date}</span> • 
+                            <span class="language">${item.language.toUpperCase()}</span>
+                        </div>
+                    </div>
+                `;
+                
+                newsContainer.appendChild(card);
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            countArticles.textContent = state.filtered.length;
+            
+            // Count unique sources
+            const sources = new Set(state.filtered.map(item => item.source));
+            countSources.textContent = sources.size;
+            
+            // Count unique languages
+            const languages = new Set(state.filtered.map(item => item.language));
+            countLanguages.textContent = languages.size;
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            searchInput.addEventListener("input", e => {
+                state.search = e.target.value;
+                filterNews();
+            });
+            
+            languageFilter.addEventListener("change", e => {
+                state.language = e.target.value;
+                filterNews();
+            });
+            
+            sortFilter.addEventListener("change", e => {
+                state.sort = e.target.value;
+                filterNews();
+            });
+            
+            refreshBtn.addEventListener("click", () => {
+                // Simulate refresh with slight delay
+                refreshBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Refreshing...';
+                setTimeout(() => {
+                    filterNews();
+                    refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh News';
+                }, 800);
+            });
+            
+            selectAllBtn.addEventListener("click", () => {
+                const checkboxes = document.querySelectorAll('.sources-list input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                state.selectedSources = [...state.sources];
+                filterNews();
+            });
+            
+            deselectAllBtn.addEventListener("click", () => {
+                const checkboxes = document.querySelectorAll('.sources-list input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                state.selectedSources = [];
+                filterNews();
+            });
+            
+            // Add change events to source checkboxes
+            const sourceCheckboxes = document.querySelectorAll('.sources-list input[type="checkbox"]');
+            sourceCheckboxes.forEach((checkbox, index) => {
+                checkbox.addEventListener("change", () => {
+                    if (checkbox.checked) {
+                        state.selectedSources.push(state.sources[index]);
+                    } else {
+                        const sourceIndex = state.selectedSources.indexOf(state.sources[index]);
+                        if (sourceIndex > -1) {
+                            state.selectedSources.splice(sourceIndex, 1);
+                        }
+                    }
+                    filterNews();
+                });
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
