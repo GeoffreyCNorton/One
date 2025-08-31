@@ -1,0 +1,109 @@
+/* Neue Haas Grotesk: host your licensed woff2 at /fonts/NeueHaasGrotesk.woff2 */
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src: url("fonts/NeueHaasGrotesk.woff2") format("woff2");
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallbacks */
+:root {
+  --bg: #f5f5f6;
+  --panel: #ffffff;
+  --muted: #7b7f86;
+  --accent: #c92b2b;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+html,body { height:100%; }
+body {
+  margin:0;
+  min-height:100%;
+  background: linear-gradient(180deg,#f7f7f8, #e9e9ea);
+  font-family: "Neue Haas Grotesk", "Helvetica Neue", Arial, sans-serif;
+  color: #111;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Layout */
+.app { display: grid; grid-template-columns: 300px 1fr; gap: 28px; padding: 28px; max-width:1300px; margin: 0 auto; align-items: start; }
+.sidebar {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 8px 10px 30px rgba(24,25,27,0.06), inset -6px -6px 12px rgba(255,255,255,0.8);
+  display:flex; flex-direction:column; height: calc(100vh - 56px); overflow:auto;
+}
+.brand h1 { font-size:20px; margin:0; color:var(--accent); letter-spacing:1px; text-transform:uppercase; }
+.brand .tag { font-size:12px; color:var(--muted); margin-top:6px; text-transform:uppercase; letter-spacing:1px; }
+
+/* Controls */
+.controls { margin-top:14px; display:flex; flex-direction:column; gap:12px; }
+.control {
+  border-radius: 10px;
+  padding:10px 12px;
+  border: 1px solid #e3e3e5;
+  background: linear-gradient(180deg,#fbfbfb,#f0f0f0);
+  box-shadow: inset 0 2px 6px rgba(255,255,255,0.6);
+  font-size:14px;
+}
+.control:focus { outline: none; box-shadow: 0 0 0 4px rgba(201,43,43,0.08); border-color: rgba(201,43,43,0.25); }
+
+/* Sources list */
+.sources { margin-top: 14px; flex:1 1 auto; display:flex; flex-direction:column; }
+.sources h3 { margin:0 0 8px 0; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+.sources-list { display:flex; flex-direction:column; gap:8px; max-height: 48vh; overflow:auto; padding-right:6px; }
+.source-row {
+  display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px; cursor:pointer;
+  transition: background .12s, transform .08s;
+}
+.source-row:hover { background: #fbfbfb; transform: translateY(-1px); }
+.source-row input { width:16px; height:16px; cursor:pointer; }
+.source-name { font-size:14px; color:#222; }
+
+.sidebar-actions { margin-top:10px; display:flex; gap:8px; }
+.btn {
+  background: linear-gradient(180deg,#f9f9f9,#f1f1f1);
+  border: 1px solid #ddd;
+  padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.btn.ghost { background:transparent; border:1px dashed #ddd; font-weight:500; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+/* Main column */
+.main {
+  display:flex; flex-direction:column; gap:12px;
+}
+.summary { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.stats { display:flex; gap:12px; align-items:center; }
+.stat { background: linear-gradient(180deg,#fff,#fafafa); padding:10px 14px; border-radius:12px; border:1px solid #eee; font-size:13px; color:var(--muted); }
+.feed { display:grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap:18px; margin-top:6px; }
+.empty { margin-top:20px; color:var(--muted); }
+
+/* Article card */
+.card {
+  background: linear-gradient(180deg,#fff,#fbfbfb);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 6px 8px 30px rgba(25,26,28,0.06);
+  border: 1px solid #f0f0f0;
+  transition: transform .15s, box-shadow .15s;
+  display:flex; flex-direction:column; gap:8px;
+}
+.card:hover { transform: translateY(-6px); box-shadow: 10px 18px 50px rgba(25,26,28,0.08); }
+.card h2 { margin:0; font-size:16px; line-height:1.2; color:#111; }
+.card h2 a { color:inherit; text-decoration:none; }
+.card p { margin:0; color:#444; font-size:14px; }
+.meta { display:flex; gap:10px; align-items:center; color:var(--muted); font-size:12px; margin-top:auto; }
+
+/* Responsive */
+@media (max-width:980px) {
+  .app { grid-template-columns: 1fr; padding:16px; }
+  .sidebar { order:2; height:auto; max-height:none; }
+  .main { order:1; }
+  .feed { grid-template-columns: 1fr; }
+}
