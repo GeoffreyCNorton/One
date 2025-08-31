@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Sample News",
+    "summary": "This is a sample news item",
+    "link": "https://example.com",
+    "source": "Example News",
+    "date": "2023-11-15",
+    "language": "en"
+  }
+]
